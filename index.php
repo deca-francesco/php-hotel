@@ -1,3 +1,9 @@
+<?php
+// se clicchiamo su filtra e la checkbox è flaggata $_GET["parkings"] esiste e sarà = "on"
+// altrimenti $_GET sarà un array vuoto e inizializziamo $parkings ad "off" con ?? controlliamo se esiste
+$parkings = $_GET["parkings"] ?? "off";
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -29,11 +35,26 @@
 
 <body>
     <header>
+        <div class="container">
+            <h1>PHP Hotels</h1>
+        </div>
     </header>
     <main>
+        <div class="container mt-3">
+            <div class="row">
+                <div class="col">
+                    <form action="" class="card p-2">
+                        <div class="mb-3">
+                            <label class="form-check-label" for="parkings"> Solo con parcheggi</label>
+                            <input class="form-check-input" type="checkbox" name="parkings" id="parkings">
+                        </div>
+                        <button class="btn btn-primary" type="submit">Filtra gli Hotel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         <?php
-
         $hotels = [
 
             [
@@ -73,10 +94,24 @@
             ],
 
         ];
+
+        // array con gli hotel filtrati inizializzato uguale all'array di tutti gli hotel se il filtro non è attivo
+        $filteredHotels = [];
+
+        if ($parkings == "on") {
+            foreach ($hotels as $hotel) {
+                if ($hotel["parking"] === true) {
+                    // Aggiunge solo gli hotel con parcheggio
+                    $filteredHotels[] = $hotel;
+                }
+            }
+        } else {
+            // Se il filtro non è attivo mostra tutti gli hotel
+            $filteredHotels = $hotels;
+        }
         ?>
 
         <div class="container mt-3">
-            <h1>PHP Hotels</h1>
             <!-- tabella con bootstrap -->
             <table class="table table-striped">
                 <thead>
@@ -90,10 +125,11 @@
                 </thead>
                 <tbody>
                     <?php
-                    // ciclo foreach per l'array di tutti gli hotel
-                    foreach ($hotels as $hotel) {
+                    // ciclo foreach per l'array degli hotel filtrati, se non c'è il filtro vedo tutti gli hotel
+                    foreach ($filteredHotels as $hotel) {
                         // stampo solo il tag di apertura così posso inserire tutto il contenuto
                         echo "<tr>";
+
                         // foreach per il singolo array associativo dell'hotel
                         foreach ($hotel as $key => $value) {
                             // if per aggiungere i km se la chiave è la distanza dal centro
@@ -107,6 +143,7 @@
                                 echo "<td>$value</td>";
                             }
                         }
+
                         // una volta riempita chiudo il tag
                         echo "</tr>";
                     }
