@@ -45,8 +45,8 @@ $parkings = $_GET["parkings"] ?? "off";
                 <div class="col">
                     <form action="" class="card p-2">
                         <div class="mb-3">
-                            <label class="form-check-label" for="parkings"> Solo con parcheggi</label>
-                            <input class="form-check-input" type="checkbox" name="parkings" id="parkings">
+                            <label class="form-check-label" for="parkings">Solo con parcheggi</label>
+                            <input class="form-check-input" type="checkbox" name="parkings" id="parkings" <?php echo $parkings == "on" ? "checked" : "" ?>>
                         </div>
                         <button class="btn btn-primary" type="submit">Filtra gli Hotel</button>
                     </form>
