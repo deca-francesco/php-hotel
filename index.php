@@ -73,18 +73,49 @@
             ],
 
         ];
-
-
-
-        // ciclo foreach per l'array di tutti gli hotel
-        foreach ($hotels as $hotel) {
-            // foreach per il singolo array associativo dell'hotel
-            foreach ($hotel as $key => $value) {
-            }
-        }
-
-
         ?>
+
+        <div class="container mt-3">
+            <h1>PHP Hotels</h1>
+            <!-- tabella con bootstrap -->
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Descrizione</th>
+                        <th>Parcheggi</th>
+                        <th>Voto</th>
+                        <th>Distanza dal centro</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    // ciclo foreach per l'array di tutti gli hotel
+                    foreach ($hotels as $hotel) {
+                        // stampo solo il tag di apertura così posso inserire tutto il contenuto
+                        echo "<tr>";
+                        // foreach per il singolo array associativo dell'hotel
+                        foreach ($hotel as $key => $value) {
+                            // if per aggiungere i km se la chiave è la distanza dal centro
+                            if ($key == "distance_to_center") {
+                                echo "<td>$value km</td>";
+                            } elseif ($key == "parking") {
+                                echo $value == true ? "<td>Sì</td>" : "<td>No</td>";
+                            } elseif ($key == "vote") {
+                                echo "<td>$value/5</td>";
+                            } else {
+                                echo "<td>$value</td>";
+                            }
+                        }
+                        // una volta riempita chiudo il tag
+                        echo "</tr>";
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+
+
 
     </main>
     <footer>
