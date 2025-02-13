@@ -46,7 +46,13 @@ $parkings = $_GET["parkings"] ?? "off";
                     <form action="" class="card p-2">
                         <div class="mb-3">
                             <label class="form-check-label" for="parkings">Solo con parcheggi</label>
+                            <!-- operatore ternario per lasciare la checkbox checked se il filtro è attivo -->
                             <input class="form-check-input" type="checkbox" name="parkings" id="parkings" <?php echo $parkings == "on" ? "checked" : "" ?>>
+                        </div>
+                        <div class="mb-3">
+                            <label for="vote">Voto minimo</label>
+                            <!-- operatore ?? per far apparire il campo voto e mantenerlo dopo l'invio (controlla se esiste e se esiste gli assegna quel valore) -->
+                            <input class="form-control" type="number" name="vote" id="vote" min="1" max="5" value="<?php echo $_GET["vote"] ?? "" ?>">
                         </div>
                         <button class="btn btn-primary" type="submit">Filtra gli Hotel</button>
                     </form>
@@ -95,7 +101,7 @@ $parkings = $_GET["parkings"] ?? "off";
 
         ];
 
-        // array con gli hotel filtrati inizializzato uguale all'array di tutti gli hotel se il filtro non è attivo
+        // array con gli hotel filtrati inizializzato uguale all'array di tutti gli hotel se il filtro non è attivo, adesso è vuoto
         $filteredHotels = [];
 
         if ($parkings == "on") {
