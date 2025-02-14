@@ -2,6 +2,8 @@
 // se clicchiamo su filtra e la checkbox è flaggata $_GET["parkings"] esiste e sarà = "on"
 // altrimenti $_GET sarà un array vuoto e inizializziamo $parkings ad "off" con ?? controlliamo se esiste
 $parkings = $_GET["parkings"] ?? "off";
+// variabile del voto. Se il filtro del voto non c'è è null (appare lo stesso nell'url)
+$vote = $_GET["vote"] ?? null;
 ?>
 
 <!doctype html>
@@ -52,9 +54,11 @@ $parkings = $_GET["parkings"] ?? "off";
                         <div class="mb-3">
                             <label for="vote">Voto minimo</label>
                             <!-- operatore ?? per far apparire il campo voto e mantenerlo dopo l'invio (controlla se esiste e se esiste gli assegna quel valore) -->
-                            <input class="form-control" type="number" name="vote" id="vote" min="1" max="5" value="<?php echo $_GET["vote"] ?? "" ?>">
+                            <input class="form-control" type="number" name="vote" id="vote" min="1" max="5" value="<?php echo $vote ?? null ?>">
                         </div>
-                        <button class="btn btn-primary" type="submit">Filtra gli Hotel</button>
+                        <button class="btn btn-primary mb-3" type="submit">Filtra gli Hotel</button>
+                        <!-- con type button non invio il form e con window.location.href ricarico la pagina senza prendere i parametri get, quindi come se li cancellassi -->
+                        <button class="btn btn-secondary" type="button" onclick="window.location.href='index.php'">Cancella filtri</button>
                     </form>
                 </div>
             </div>
@@ -101,23 +105,29 @@ $parkings = $_GET["parkings"] ?? "off";
 
         ];
 
-        // array con gli hotel filtrati inizializzato uguale all'array di tutti gli hotel se il filtro non è attivo, adesso è vuoto
+        // array con gli hotel filtrati inizializzato vuoto, se non ci sono filtri le if sono false e tutti gli hotel vengono inseriti in filteredHotels
         $filteredHotels = [];
 
-        if ($parkings == "on") {
-            foreach ($hotels as $hotel) {
-                if ($hotel["parking"] === true) {
-                    // Aggiunge solo gli hotel con parcheggio
-                    $filteredHotels[] = $hotel;
-                }
+        // Filtra gli hotel
+        foreach ($hotels as $hotel) {
+            // Filtra per parcheggio se attivo, altrimenti non fai niente e vai al prossimo (con continue lo saltiamo)
+            if ($parkings == "on" && !$hotel["parking"]) {
+                continue;
             }
-        } else {
-            // Se il filtro non è attivo mostra tutti gli hotel
-            $filteredHotels = $hotels;
+
+            // Filtra per voto minimo (se impostato)
+            if ($vote !== null && $hotel["vote"] < $vote) {
+                continue;
+            }
+
+            // Se l'hotel ha superato i controlli, lo aggiungiamo all'array
+            $filteredHotels[] = $hotel;
         }
+
         ?>
 
         <div class="container mt-3">
+            <h2>Risultati:</h2>
             <!-- tabella con bootstrap -->
             <table class="table table-striped">
                 <thead>
