@@ -4,7 +4,69 @@
 $parkings = $_GET["parkings"] ?? "off";
 // variabile del voto. Se il filtro del voto non c'è è null (appare lo stesso nell'url)
 $vote = $_GET["vote"] ?? null;
+
+
+$hotels = [
+
+    [
+        'name' => 'Hotel Belvedere',
+        'description' => 'Hotel Belvedere Descrizione',
+        'parking' => true,
+        'vote' => 4,
+        'distance_to_center' => 10.4
+    ],
+    [
+        'name' => 'Hotel Futuro',
+        'description' => 'Hotel Futuro Descrizione',
+        'parking' => true,
+        'vote' => 2,
+        'distance_to_center' => 2
+    ],
+    [
+        'name' => 'Hotel Rivamare',
+        'description' => 'Hotel Rivamare Descrizione',
+        'parking' => false,
+        'vote' => 1,
+        'distance_to_center' => 1
+    ],
+    [
+        'name' => 'Hotel Bellavista',
+        'description' => 'Hotel Bellavista Descrizione',
+        'parking' => false,
+        'vote' => 5,
+        'distance_to_center' => 5.5
+    ],
+    [
+        'name' => 'Hotel Milano',
+        'description' => 'Hotel Milano Descrizione',
+        'parking' => true,
+        'vote' => 2,
+        'distance_to_center' => 50
+    ],
+
+];
+
+// array con gli hotel filtrati inizializzato vuoto, se non ci sono filtri le if sono false e tutti gli hotel vengono inseriti in filteredHotels
+$filteredHotels = [];
+
+// Filtra gli hotel
+foreach ($hotels as $hotel) {
+    // Filtra per parcheggio se attivo, altrimenti non fai niente e vai al prossimo (con continue lo saltiamo)
+    if ($parkings == "on" && !$hotel["parking"]) {
+        continue;
+    }
+
+    // Filtra per voto minimo (se impostato)
+    if ($vote !== null && $hotel["vote"] < $vote) {
+        continue;
+    }
+
+    // Se l'hotel ha superato i controlli, lo aggiungiamo all'array
+    $filteredHotels[] = $hotel;
+}
+
 ?>
+
 
 <!doctype html>
 <html lang="en">
@@ -57,74 +119,12 @@ $vote = $_GET["vote"] ?? null;
                             <input class="form-control" type="number" name="vote" id="vote" min="1" max="5" value="<?php echo $vote ?? null ?>">
                         </div>
                         <button class="btn btn-primary mb-3" type="submit">Filtra gli Hotel</button>
-                        <!-- con type button non invio il form e con window.location.href ricarico la pagina senza prendere i parametri get, quindi come se li cancellassi -->
-                        <button class="btn btn-secondary" type="button" onclick="window.location.href='index.php'">Cancella filtri</button>
+                        <!-- ricarico la pagina senza prendere i parametri get, quindi come se li cancellassi -->
+                        <a class="btn btn-secondary" href='index.php'>Cancella filtri</a>
                     </form>
                 </div>
             </div>
         </div>
-
-        <?php
-        $hotels = [
-
-            [
-                'name' => 'Hotel Belvedere',
-                'description' => 'Hotel Belvedere Descrizione',
-                'parking' => true,
-                'vote' => 4,
-                'distance_to_center' => 10.4
-            ],
-            [
-                'name' => 'Hotel Futuro',
-                'description' => 'Hotel Futuro Descrizione',
-                'parking' => true,
-                'vote' => 2,
-                'distance_to_center' => 2
-            ],
-            [
-                'name' => 'Hotel Rivamare',
-                'description' => 'Hotel Rivamare Descrizione',
-                'parking' => false,
-                'vote' => 1,
-                'distance_to_center' => 1
-            ],
-            [
-                'name' => 'Hotel Bellavista',
-                'description' => 'Hotel Bellavista Descrizione',
-                'parking' => false,
-                'vote' => 5,
-                'distance_to_center' => 5.5
-            ],
-            [
-                'name' => 'Hotel Milano',
-                'description' => 'Hotel Milano Descrizione',
-                'parking' => true,
-                'vote' => 2,
-                'distance_to_center' => 50
-            ],
-
-        ];
-
-        // array con gli hotel filtrati inizializzato vuoto, se non ci sono filtri le if sono false e tutti gli hotel vengono inseriti in filteredHotels
-        $filteredHotels = [];
-
-        // Filtra gli hotel
-        foreach ($hotels as $hotel) {
-            // Filtra per parcheggio se attivo, altrimenti non fai niente e vai al prossimo (con continue lo saltiamo)
-            if ($parkings == "on" && !$hotel["parking"]) {
-                continue;
-            }
-
-            // Filtra per voto minimo (se impostato)
-            if ($vote !== null && $hotel["vote"] < $vote) {
-                continue;
-            }
-
-            // Se l'hotel ha superato i controlli, lo aggiungiamo all'array
-            $filteredHotels[] = $hotel;
-        }
-
-        ?>
 
         <div class="container mt-3">
             <h2>Risultati:</h2>
@@ -140,6 +140,7 @@ $vote = $_GET["vote"] ?? null;
                     </tr>
                 </thead>
                 <tbody>
+
                     <?php
                     // ciclo foreach per l'array degli hotel filtrati, se non c'è il filtro vedo tutti gli hotel
                     foreach ($filteredHotels as $hotel) {
@@ -164,6 +165,7 @@ $vote = $_GET["vote"] ?? null;
                         echo "</tr>";
                     }
                     ?>
+
                 </tbody>
             </table>
         </div>
